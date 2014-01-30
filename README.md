@@ -1,12 +1,12 @@
-diff-html
+html-diff
 =========
 
-Create a diff html of text file / side by side
+Create a html diff of text file / side by side
 
 ```
 DiffParams params = new DiffParams.Builder()
                 .left(new File("old.txt"))
-                .right("new.txt")
+                .right(new File("new.txt"))
                 .build();
 
 new HtmlDiff().diff(params);
