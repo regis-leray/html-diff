@@ -3,6 +3,8 @@ package org.rayjars.diff;
 import org.junit.Test;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 
@@ -11,13 +13,17 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class HtmlDiffTest {
 
-
-
-
     @Test
-    public void shouldCreateDiffWithString() throws FileNotFoundException {
-        HtmlDiff diff = new HtmlDiff();
-        diff.diff("My Name is Html Diff", "My name is Diff");
+    public void shouldCreateDiffWithString() throws IOException {
+
+        DiffParams params = new DiffParams.Builder()
+                .left("My Name is Html Diff")
+                .right("My name is Diff")
+                .build();
+
+        FileOutputStream outputStream = (FileOutputStream) new HtmlDiff().diff(params);
+
+        assertThat(outputStream, org.hamcrest.core.IsNull.notNullValue());
     }
 
     @Test
@@ -25,8 +31,30 @@ public class HtmlDiffTest {
         File left = getFileFromClasspath("1.txt");
         File right = getFileFromClasspath("2.txt");
 
+        DiffParams params = new DiffParams.Builder()
+                .left(left)
+                .leftName("old.txt")
+                .right(right)
+                .rightName("new.txt")
+                .build();
+
+
         HtmlDiff diff = new HtmlDiff();
-        diff.diff(left, right);
+        diff.diff(params);
+    }
+
+    @Test
+    public void shouldCreateDiffWithOldAndNewFile() throws Exception {
+        File left = getFileFromClasspath("old.txt");
+        File right = getFileFromClasspath("new.txt");
+
+        DiffParams params = new DiffParams.Builder()
+                .left(left)
+                .right(right)
+                .build();
+
+        HtmlDiff diff = new HtmlDiff();
+        diff.diff(params);
     }
 
 

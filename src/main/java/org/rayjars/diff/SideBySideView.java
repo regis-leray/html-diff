@@ -6,24 +6,25 @@ import difflib.DiffRow.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SideBySideView {
-    private static final String NOT_EQUALS = "NOT_EQUALS";
-	private static final String EQUALS = "EQUALS";
+
 	private final List<Line> lines;
-    private final String leftFilePath;
-    private final String rightFilePath;
-    private boolean isEquals = true;
+
+    private final String leftName;
+
+    private final String rightName;
+
     private int counterDifference = 0;
     
 	private Logger logger = LoggerFactory.getLogger(SideBySideView.class);
     
-    public SideBySideView(String leftFilePath, String rightFilePath) {
-    	this.leftFilePath = leftFilePath;
-    	this.rightFilePath = rightFilePath;
+    public SideBySideView(String leftName, String rightName) {
+    	this.leftName = leftName;
+    	this.rightName = rightName;
     	lines = new ArrayList<Line>();
     }
     
@@ -35,12 +36,12 @@ public class SideBySideView {
     	return lines;
     }
     
-    public String getLeftFilePath() {
-		return leftFilePath;
+    public String getLeftName() {
+		return leftName;
 	}
 
-	public String getRightFilePath() {
-		return rightFilePath;
+	public String getRightName() {
+		return rightName;
 	}
 
 	public SideBySideView build(List<DiffRow> diffRows){
@@ -95,7 +96,6 @@ public class SideBySideView {
             }
             
             if (tag != Tag.EQUAL){
-            	isEquals = false;
             	counterDifference++;
             }
             
@@ -106,23 +106,13 @@ public class SideBySideView {
         
         return this;
     }
-    
-    public boolean isEquals() {
-		return isEquals;
-	}
-    
-    public String status(){
-    	return isEquals() ? EQUALS : NOT_EQUALS;
-    }
-    
 
     public int getCounterDifferences() {
 		return counterDifference;
 	}
     
-    public void toHtml(File outputFile, long elpasedTime){
-    	
-    	new HtmlView().toHtml(outputFile, elpasedTime, this);
+    public void toHtml(OutputStream output, long elpasedTime){
+    	new HtmlView().toHtml(output, elpasedTime, this);
     }
     
 	public static class Line {

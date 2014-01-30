@@ -4,6 +4,7 @@ package org.rayjars.diff;
 import difflib.DiffRow;
 import difflib.DiffRowGenerator;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,25 +24,17 @@ public class HtmlDiff {
 
     private int columnWidth = DEFAULT_COLUMN_WITH;
 
-    private InputStream left = null;
-
-    private InputStream right = null;
-
     private OutputStream output = null;
 
     private Logger logger = LoggerFactory.getLogger(HtmlDiff.class);
 
     public HtmlDiff(){
         try {
-            output = new FileOutputStream(File.createTempFile("diff", "html"));
+            output = new FileOutputStream(File.createTempFile("diff", ".html"));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
-    }
-
-    public OutputStream getOutput() {
-        return output;
     }
 
     public HtmlDiff setOutput(OutputStream output) {
@@ -86,27 +79,17 @@ public class HtmlDiff {
     }
 
 
-    public OutputStream diff(File left, File right) throws FileNotFoundException {
-        return diff(new FileInputStream(left), new FileInputStream(right));
-    }
-
-    public OutputStream diff(String left, String right){
-        return diff(new ByteArrayInputStream(left.getBytes()), new ByteArrayInputStream(right.getBytes()));
-    }
-
-    public OutputStream diff(InputStream left, InputStream right){
-
-
+    public OutputStream diff(DiffParams params) throws IOException {
         final long start = System.currentTimeMillis();
 
-        List<String> referenceContent = FileUtils.readLines(left);
-        List<String> compareContent = FileUtils.readLines(right);
+        List<String> referenceContent = IOUtils.readLines(params.getLeft());
+        List<String> compareContent =  IOUtils.readLines(params.getRight());
 
         List<DiffRow> diffRows = diff(referenceContent, compareContent, start);
 
-        SideBySideView view = new SideBySideView("left content", "right content")
+        SideBySideView view = new SideBySideView(params.getLeftName(), params.getRightName())
                 .build(diffRows);
-        view.toHtml(outputFile, System.currentTimeMillis() - start);
+        view.toHtml(output, System.currentTimeMillis() - start);
 
         return output;
     }
@@ -128,4 +111,9 @@ public class HtmlDiff {
         }
         return diffRows;
     }
+
+
+
+
+
 }
