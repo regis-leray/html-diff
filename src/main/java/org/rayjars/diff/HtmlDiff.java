@@ -37,6 +37,10 @@ public class HtmlDiff {
 
     }
 
+    public HtmlDiff setOutput(File output) throws FileNotFoundException {
+        return setOutput(new FileOutputStream(output));
+    }
+
     public HtmlDiff setOutput(OutputStream output) {
         this.output = output;
         return this;
