@@ -1,4 +1,4 @@
-package org.rayjars.diff;
+package org.rayjars.diff.utils;
 
 public final class TimeElapsedUtils {
 	private static String format = String.format("%%0%dd", 2);

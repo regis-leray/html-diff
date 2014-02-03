@@ -1,6 +1,7 @@
 package org.rayjars.diff;
 
 import org.junit.Test;
+import org.rayjars.diff.utils.TimeElapsedUtils;
 
 import static org.junit.Assert.assertEquals;
 

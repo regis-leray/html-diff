@@ -3,10 +3,10 @@ package org.rayjars.diff;
 
 import difflib.DiffRow;
 import difflib.DiffRow.Tag;
+import org.rayjars.diff.utils.TimeElapsedUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +19,9 @@ public class SideBySideView {
     private final String rightName;
 
     private int counterDifference = 0;
-    
+
+    private long startTime = 0l;
+
 	private Logger logger = LoggerFactory.getLogger(SideBySideView.class);
     
     public SideBySideView(String leftName, String rightName) {
@@ -32,7 +34,16 @@ public class SideBySideView {
         lines.add(line);
     }
 
-	public List<Line> getLines(){
+    public SideBySideView startTime(long startTime) {
+        this.startTime = startTime;
+        return this;
+    }
+
+    public long getStartTime() {
+        return startTime;
+    }
+
+    public List<Line> getLines(){
     	return lines;
     }
     
@@ -102,7 +113,7 @@ public class SideBySideView {
             addLine(line);
         }
         
-        logger.debug("executed time view : {}",TimeElapsedUtils.formatAsNano(System.nanoTime() - start));
+        logger.debug("executed time view : {}", TimeElapsedUtils.formatAsNano(System.nanoTime() - start));
         
         return this;
     }
@@ -110,12 +121,9 @@ public class SideBySideView {
     public int getCounterDifferences() {
 		return counterDifference;
 	}
-    
-    public void toHtml(OutputStream output, long elpasedTime){
-    	new HtmlView().toHtml(output, elpasedTime, this);
-    }
-    
-	public static class Line {
+
+
+    public static class Line {
     	public Item left = new Item();
     	public Item right = new Item();
     	

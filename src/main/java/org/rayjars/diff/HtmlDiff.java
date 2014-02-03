@@ -3,8 +3,8 @@ package org.rayjars.diff;
 
 import difflib.DiffRow;
 import difflib.DiffRowGenerator;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
+import org.rayjars.diff.builder.DiffBuilder;
+import org.rayjars.diff.utils.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,9 +28,12 @@ public class HtmlDiff {
 
     private Logger logger = LoggerFactory.getLogger(HtmlDiff.class);
 
+    private DiffBuilder builder;
+
     public HtmlDiff(){
         try {
             output = new FileOutputStream(File.createTempFile("diff", ".html"));
+            builder = new DiffBuilder();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -86,21 +89,21 @@ public class HtmlDiff {
     public OutputStream diff(DiffParams params) throws IOException {
         final long start = System.currentTimeMillis();
 
-        List<String> referenceContent = IOUtils.readLines(params.getLeft());
-        List<String> compareContent =  IOUtils.readLines(params.getRight());
-
-        List<DiffRow> diffRows = diff(referenceContent, compareContent, start);
+        List<DiffRow> diffRows = createDiffRows(params);
 
         SideBySideView view = new SideBySideView(params.getLeftName(), params.getRightName())
+                .startTime(start)
                 .build(diffRows);
-        view.toHtml(output, System.currentTimeMillis() - start);
+
+        builder.build(output, view);
 
         return output;
     }
 
+    private List<DiffRow> createDiffRows(DiffParams params) throws IOException {
+        List<String> referenceContent = IOUtils.readLines(params.getLeft());
+        List<String> compareContent =  IOUtils.readLines(params.getRight());
 
-
-    private List<DiffRow> diff(List<String> referenceContent, List<String> compareContent, long start) {
         List<DiffRow> diffRows = new ArrayList<DiffRow>();
 
         if(!referenceContent.isEmpty() || !compareContent.isEmpty()){
@@ -111,13 +114,8 @@ public class HtmlDiff {
                     .ignoreWhiteSpaces(isIgnoreWhitespaces()).build();
 
             diffRows = diffRowGenerator.generateDiffRows(referenceContent, compareContent);
-            logger.debug("executed time diff : {}",TimeElapsedUtils.format(System.currentTimeMillis() - start));
+
         }
         return diffRows;
     }
-
-
-
-
-
 }
