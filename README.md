@@ -1,4 +1,4 @@
-tml-diff [![Build Status](https://travis-ci.org/regis-leray/html-diff.png)](https://travis-ci.org/regis-leray/html-diff)
+Html-diff [![Build Status](https://travis-ci.org/regis-leray/html-diff.png)](https://travis-ci.org/regis-leray/html-diff)
 =========
 
 The text comparaison file / Side by Side
