@@ -1,10 +1,10 @@
 html-diff [![Build Status](https://travis-ci.org/regis-leray/html-diff.png)](https://travis-ci.org/regis-leray/html-diff)
-======
+=========
+
+The text comparaison file / Side by Side
 
 How to use
 ==========
-
-Create a html diff of text file / side by side
 
 By default it generate a diff html file in your tmp directory by using the system property java.io.tmpdir.
 ```
