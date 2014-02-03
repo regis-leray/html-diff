@@ -1,5 +1,8 @@
-html-diff
-=========
+html-diff [![Build Status](https://travis-ci.org/regis-leray/html-diff.png)](https://travis-ci.org/regis-leray/html-diff)
+======
+
+How to use
+==========
 
 Create a html diff of text file / side by side
 
