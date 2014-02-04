@@ -1,6 +1,16 @@
 language: java
+
 jdk:
   - openjdk6
   - openjdk7
   - oraclejdk7
+  
 script: "mvn clean install"
+
+branches:
+  only:
+    - master
+
+notifications:
+  email:
+    - regis.leray@gmail.com
